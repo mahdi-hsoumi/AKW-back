@@ -26,7 +26,7 @@ setupSwagger(app);
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/health', healthRoutes);
+app.use('/api', healthRoutes);
 app.use('/api/kyc', kycRoutes);
 
 app.get('/', (req, res) => {
