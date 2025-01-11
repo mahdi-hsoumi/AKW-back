@@ -16,11 +16,7 @@ app.set('trust proxy', 1);
 // Configure middleware
 app.use(helmet());
 
-const corsOptions = {
-  origin: 'http://your-frontend-domain.com',
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 app.use(errorHandler);
 app.use(limiter);
