@@ -17,3 +17,13 @@ export const submitKYCSchema = Joi.object({
 export const updateKYCStatusSchema = Joi.object({
   status: Joi.string().valid('pending', 'approved', 'rejected').required(),
 });
+
+export const listKYCQuerySchema = Joi.object({
+  status: Joi.string().valid('pending', 'approved', 'rejected').optional(),
+  sortBy: Joi.string()
+    .valid('name', 'status', 'createdAt', 'updatedAt')
+    .optional(),
+  sortOrder: Joi.string().valid('asc', 'desc').optional(),
+  page: Joi.number().integer().min(1).optional(),
+  limit: Joi.number().integer().min(1).optional(),
+});

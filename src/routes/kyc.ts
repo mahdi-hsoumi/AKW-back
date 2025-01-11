@@ -7,10 +7,16 @@ import {
   submitKYC,
   getKYC,
   updateKYCStatus,
+  getKPI,
+  listKYC,
 } from '../controllers/kycController';
 import { isAdmin, isAuthenticatedUser } from '../middlewares/auth';
 import validate from '../middlewares/validate';
-import { submitKYCSchema, updateKYCStatusSchema } from '../validators/kyc';
+import {
+  submitKYCSchema,
+  updateKYCStatusSchema,
+  listKYCQuerySchema,
+} from '../validators/kyc';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -88,6 +94,76 @@ router.post(
  *         description: Server error
  */
 router.get('/', isAuthenticatedUser, getKYC);
+
+/**
+ * @swagger
+ * /api/kyc/kpi:
+ *   get:
+ *     summary: Get KPI data
+ *     tags: [KYC]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: KPI data retrieved successfully
+ *       401:
+ *         description: No token, authorization denied
+ *       403:
+ *         description: Access denied
+ *       500:
+ *         description: Server error
+ */
+router.get('/kpi', isAdmin, getKPI);
+
+/**
+ * @swagger
+ * /api/kyc/list:
+ *   get:
+ *     summary: List KYC applications
+ *     tags: [KYC]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [pending, approved, rejected]
+ *         description: Filter by KYC status
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *         description: Field to sort by
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *         description: Sort order
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: List of KYC applications
+ *       401:
+ *         description: No token, authorization denied
+ *       403:
+ *         description: Access denied
+ *       500:
+ *         description: Server error
+ */
+router.get('/list', isAdmin, validate(listKYCQuerySchema), listKYC);
 
 /**
  * @swagger
