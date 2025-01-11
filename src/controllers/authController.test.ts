@@ -9,8 +9,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 process.env.JWT_SECRET = 'your_test_secret';
 
-dotenv.config();
-
 // Mock the User model
 jest.mock('../models/user');
 

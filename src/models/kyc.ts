@@ -11,7 +11,6 @@ export interface IKYC extends Document {
 const KYCSchema: Schema = new Schema({
   userId: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
   name: { type: String, required: true },
-  email: { type: String, required: true },
   idDocument: { type: String, required: true },
   status: {
     type: String,
