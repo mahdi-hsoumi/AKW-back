@@ -51,12 +51,9 @@ export const isAuthenticatedUser = (
       token,
       process.env.JWT_SECRET!,
     ) as CustomJwtPayload;
-    if (decoded.role !== 'user') {
-      res.status(403).json({ message: 'Access denied' });
-      return;
-    }
 
     req.userId = decoded.userId;
+    req.userRole = decoded.role;
     next();
   } catch {
     res.status(401).json({ message: 'Token is not valid' });

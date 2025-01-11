@@ -7,6 +7,7 @@ import setupSwagger from './config/swagger';
 import authRoutes from './routes/auth';
 import healthRoutes from './routes/health';
 import kycRoutes from './routes/kyc';
+import userRoutes from './routes/user';
 
 const app = express();
 
@@ -27,6 +28,7 @@ setupSwagger(app);
 app.use('/api/auth', authRoutes);
 app.use('/api', healthRoutes);
 app.use('/api/kyc', kycRoutes);
+app.use('/api/user', userRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
