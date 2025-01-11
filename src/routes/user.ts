@@ -1,21 +1,24 @@
-// AKW-back/src/routes/user.ts
 import { Router } from 'express';
 import { isAuthenticatedUser } from '../middlewares/auth';
-import User from '../models/user';
-
+import { getMe } from '../controllers/userController';
 const router = Router();
 
-router.get('/me', isAuthenticatedUser, async (req, res) => {
-  try {
-    const user = await User.findById(req.userId).select('username role');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.status(200).json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
+/**
+ * @swagger
+ * /api/user/me:
+ *   get:
+ *     summary: Get current user information
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User information retrieved successfully
+ *       401:
+ *         description: No token, authorization denied
+ *       500:
+ *         description: Server error
+ */
+router.get('/me', isAuthenticatedUser, getMe);
 
 export default router;
