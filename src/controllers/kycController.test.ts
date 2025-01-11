@@ -45,7 +45,7 @@ describe('KYC Controller', () => {
         .field('name', 'John Doe')
         .attach(
           'idDocument',
-          path.resolve(__dirname, '../../static/testFile.pdf'),
+          path.resolve(__dirname, '../../static/testFile.jpg'),
         );
       expect(response.status).toBe(201);
       expect(response.body.message).toBe('KYC data submitted successfully');

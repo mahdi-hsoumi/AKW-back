@@ -8,6 +8,13 @@ export const submitKYC = async (req: Request, res: Response): Promise<void> => {
   const file = req.file;
 
   try {
+    // Check if a KYC record already exists for the user
+    const existingKYC = await KYC.findOne({ userId });
+    if (existingKYC) {
+      res.status(400).json({ message: 'KYC data already submitted' });
+      return;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const idDocumentUrl = (file as any).location;
     const kyc = new KYC({ userId, name, idDocument: idDocumentUrl });
