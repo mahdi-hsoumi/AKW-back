@@ -10,6 +10,9 @@ import kycRoutes from './routes/kyc';
 
 const app = express();
 
+// Trust the first proxy
+app.set('trust proxy', 1);
+
 // Configure middleware
 app.use(helmet());
 
