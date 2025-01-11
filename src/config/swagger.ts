@@ -4,11 +4,28 @@ import { Express } from 'express';
 
 const options = {
   definition: {
-    openapi: '3.0.0',
+    openapi: '3.0.3',
     info: {
       title: 'API Documentation',
-      version: '1.0.0',
+      version: '0.0.1',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          in: 'header',
+          name: 'Authorization',
+          description: 'Bearer Token',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   apis: ['./src/routes/*.ts'], // Path to the API docs
 };

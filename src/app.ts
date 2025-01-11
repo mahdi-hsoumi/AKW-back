@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import limiter from './config/rateLimit';
 import setupSwagger from './config/swagger';
+import authRoutes from './routes/auth';
+import healthRoutes from './routes/health';
 
 const app = express();
 
@@ -22,6 +24,9 @@ app.use(limiter);
 setupSwagger(app);
 
 // Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/health', healthRoutes);
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
