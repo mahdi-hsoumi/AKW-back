@@ -1,4 +1,8 @@
+// src/routes/kyc.ts
 import { Router } from 'express';
+import multer from 'multer';
+import multerS3 from 'multer-s3';
+import s3 from '../config/s3';
 import {
   submitKYC,
   getKYC,
@@ -8,7 +12,21 @@ import { isAdmin, isAuthenticatedUser } from '../middlewares/auth';
 import validate from '../middlewares/validate';
 import { submitKYCSchema, updateKYCStatusSchema } from '../validators/kyc';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const router = Router();
+
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.AWS_S3_BUCKET_NAME!,
+    acl: 'public-read',
+    key: (req, file, cb) => {
+      cb(null, `kyc/${Date.now().toString()}_${file.originalname}`);
+    },
+  }),
+});
 
 /**
  * @swagger
@@ -21,7 +39,7 @@ const router = Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -32,6 +50,7 @@ const router = Router();
  *                 type: string
  *               idDocument:
  *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: KYC data submitted successfully
@@ -45,6 +64,7 @@ const router = Router();
 router.post(
   '/submit',
   isAuthenticatedUser,
+  upload.single('idDocument'),
   validate(submitKYCSchema),
   submitKYC,
 );

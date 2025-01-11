@@ -3,11 +3,21 @@ import mongoose from 'mongoose';
 import app from '../app';
 import KYC from '../models/kyc';
 import { isAdmin, isAuthenticatedUser } from '../middlewares/auth';
+import path from 'path';
 
 import dotenv from 'dotenv';
 
 dotenv.config();
 process.env.JWT_SECRET = 'your_test_secret';
+
+// Mock the S3 upload
+jest.mock('aws-sdk', () => {
+  const S3 = {
+    upload: jest.fn().mockReturnThis(),
+    promise: jest.fn().mockResolvedValue({ Location: 'mocked_s3_url' }),
+  };
+  return { S3: jest.fn(() => S3) };
+});
 
 jest.mock('../middlewares/auth');
 
@@ -32,11 +42,11 @@ describe('KYC Controller', () => {
       const response = await request(app)
         .post('/api/kyc/submit')
         .set('Authorization', 'Bearer mockToken')
-        .send({
-          name: 'John Doe',
-          idDocument: 'path/to/idDocument',
-        });
-
+        .field('name', 'John Doe')
+        .attach(
+          'idDocument',
+          path.resolve(__dirname, '../../static/testFile.pdf'),
+        );
       expect(response.status).toBe(201);
       expect(response.body.message).toBe('KYC data submitted successfully');
     });

@@ -3,11 +3,14 @@ import KYC from '../models/kyc';
 
 // Submit KYC data
 export const submitKYC = async (req: Request, res: Response): Promise<void> => {
-  const { name, idDocument } = req.body;
+  const { name } = req.body;
   const userId = req.userId;
+  const file = req.file;
 
   try {
-    const kyc = new KYC({ userId, name, idDocument });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const idDocumentUrl = (file as any).location;
+    const kyc = new KYC({ userId, name, idDocument: idDocumentUrl });
     await kyc.save();
     res.status(201).json({ message: 'KYC data submitted successfully' });
   } catch (err) {
