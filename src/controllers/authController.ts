@@ -13,6 +13,12 @@ const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const existingUserByUsername = await User.findOne({ username });
+    if (existingUserByUsername) {
+      res.status(400).json({ message: 'Username is already taken' });
+      return;
+    }
+
     const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 

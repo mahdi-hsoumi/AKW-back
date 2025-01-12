@@ -3,7 +3,6 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IKYC extends Document {
   userId: mongoose.Types.ObjectId;
   name: string;
-  email: string;
   idDocument: string; // Path to the uploaded ID document
   status: 'pending' | 'approved' | 'rejected';
   createdAt: Date;
