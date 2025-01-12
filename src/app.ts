@@ -18,7 +18,7 @@ app.set('trust proxy', 1);
 app.use(helmet());
 
 app.use(cors({
-    origin: 'http://localhost:3000', // Allow requests from this origin
+    origin: 'https://nova-web-app-orpin.vercel.app', // Allow requests from this origin
     credentials: true // Allow cookies to be sent
 }))
 
